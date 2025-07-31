@@ -16,26 +16,30 @@
     <p><strong>No. Telepon:</strong> {{ $penjualan->pelanggan->NomorTelepon }}</p>
 
     <h3>Detail Pembelian</h3>
-    <table border="1" cellpadding="6" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Nama Produk</th>
-                <th>Harga</th>
-                <th>Jumlah</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($penjualan->detailpenjualan as $item)
+    @if($penjualan->detailPenjualans && $penjualan->detailPenjualans->count())
+        <table border="1" cellpadding="6" cellspacing="0">
+            <thead>
                 <tr>
-                    <td>{{ $item->produk->NamaProduk }}</td>
-                    <td>Rp{{ number_format($item->produk->Harga, 0, ',', '.') }}</td>
-                    <td>{{ $item->JumlahProduk }}</td>
-                    <td>Rp{{ number_format($item->Subtotal, 0, ',', '.') }}</td>
+                    <th>Nama Produk</th>
+                    <th>Harga</th>
+                    <th>Jumlah</th>
+                    <th>Subtotal</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($penjualan->detailPenjualans as $item)
+                    <tr>
+                        <td>{{ $item->produk->NamaProduk ?? 'Produk tidak ditemukan' }}</td>
+                        <td>Rp{{ number_format($item->produk->Harga ?? 0, 0, ',', '.') }}</td>
+                        <td>{{ $item->JumlahProduk }}</td>
+                        <td>Rp{{ number_format($item->Subtotal, 0, ',', '.') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <p>Tidak ada detail pembelian yang tersedia.</p>
+    @endif
 
     <h3>Total Pembayaran: Rp{{ number_format($penjualan->TotalHarga, 0, ',', '.') }}</h3>
 

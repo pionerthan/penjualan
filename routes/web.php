@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\KeranjangController;
+use App\Http\Controllers\TransaksiController;
 
 // ===================
 // Halaman Utama
@@ -21,19 +23,32 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ===================
-// Rute untuk Pembeli (Harus login)
+// Rute untuk Pembeli (Wajib Login)
 // ===================
 Route::middleware('auth')->group(function () {
-    // Tampilkan form beli (jika dipakai, bisa dihapus kalau langsung beli dari home)
-    Route::get('/beli', [ProdukController::class, 'showBeliForm'])->name('beli.form');
 
-    // Proses pembelian langsung
+    // ===================
+    // Pembelian Langsung
+    // ===================
+    Route::get('/beli', [ProdukController::class, 'showBeliForm'])->name('beli.form');
     Route::post('/beli', [ProdukController::class, 'prosesBeli'])->name('beli.proses');
 
-    // Halaman pembayaran setelah beli
-    Route::get('/pembayaran/{id}', [ProdukController::class, 'pembayaran'])->name('pembayaran');
+    // ===================
+    // Keranjang
+    // ===================
+    Route::post('/keranjang/tambah', [KeranjangController::class, 'tambah'])->name('keranjang.tambah');
+    Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
+    Route::delete('/keranjang/hapus/{id}', [KeranjangController::class, 'hapus'])->name('keranjang.hapus');
+    Route::put('/keranjang/update/{id}', [KeranjangController::class, 'update'])->name('keranjang.update');
 
-    // (Jika kamu gunakan keranjang + checkout)
-    Route::get('/checkout', [ProdukController::class, 'checkout'])->name('checkout');
-    Route::post('/checkout', [ProdukController::class, 'processCheckout'])->name('checkout.process');
+    // ===================
+    // Checkout & Transaksi
+    // ===================
+    Route::get('/checkout', [TransaksiController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [TransaksiController::class, 'proses'])->name('checkout.proses');
+
+    // ===================
+    // Pembayaran
+    // ===================
+    Route::get('/pembayaran/{id}', [TransaksiController::class, 'pembayaran'])->name('pembayaran');
 });
