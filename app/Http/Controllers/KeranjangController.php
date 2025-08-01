@@ -8,17 +8,18 @@ use Illuminate\Support\Facades\Session;
 
 class KeranjangController extends Controller
 {
-    // Tampilkan isi keranjang
+    // Menampilkan isi keranjang
     public function index()
     {
         $keranjang = Session::get('keranjang', []);
         $produkIDs = array_keys($keranjang);
+
         $produks = Produk::whereIn('ProdukID', $produkIDs)->get();
 
         return view('auth.keranjang', compact('produks', 'keranjang'));
     }
 
-    // Tambah ke keranjang
+    // Menambahkan produk ke keranjang
     public function tambah(Request $request)
     {
         $request->validate([
@@ -26,14 +27,15 @@ class KeranjangController extends Controller
             'jumlah' => 'required|integer|min:1',
         ]);
 
-        $keranjang = Session::get('keranjang', []);
         $produkId = $request->produk_id;
-        $jumlahBaru = $request->jumlah;
+        $jumlah = $request->jumlah;
+
+        $keranjang = Session::get('keranjang', []);
 
         if (isset($keranjang[$produkId])) {
-            $keranjang[$produkId] += $jumlahBaru;
+            $keranjang[$produkId] += $jumlah;
         } else {
-            $keranjang[$produkId] = $jumlahBaru;
+            $keranjang[$produkId] = $jumlah;
         }
 
         Session::put('keranjang', $keranjang);
@@ -41,23 +43,25 @@ class KeranjangController extends Controller
         return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
     }
 
-    // Hapus produk dari keranjang
-    public function hapus($produkId)
-    {
-        $keranjang = Session::get('keranjang', []);
+    // Menghapus satu produk dari keranjang
+    public function hapus($id)
+{
+    $keranjang = session()->get('keranjang', []);
 
-        if (isset($keranjang[$produkId])) {
-            unset($keranjang[$produkId]);
-            Session::put('keranjang', $keranjang);
-        }
-
-        return redirect()->route('keranjang.index')->with('success', 'Produk dihapus dari keranjang.');
+    if (isset($keranjang[$id])) {
+        unset($keranjang[$id]);
+        session(['keranjang' => $keranjang]);
     }
 
-    // Kosongkan seluruh keranjang
+    return redirect()->back()->with('success', 'Produk berhasil dihapus dari keranjang.');
+}
+
+
+    // Mengosongkan seluruh isi keranjang
     public function kosongkan()
     {
         Session::forget('keranjang');
-        return redirect()->route('keranjang.index')->with('success', 'Keranjang dikosongkan.');
+
+        return redirect()->route('keranjang.index')->with('success', 'Keranjang berhasil dikosongkan.');
     }
 }

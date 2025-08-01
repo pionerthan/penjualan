@@ -39,6 +39,12 @@ class ProdukResource extends Resource
             Forms\Components\TextInput::make('Stok')
                 ->numeric()
                 ->required(),
+
+            Forms\Components\TextInput::make('FotoURL')
+            ->label('URL Foto Produk')
+            ->placeholder('https://example.com/foto.jpg')
+            ->url() // validasi bahwa ini URL
+            ->maxLength(2048),
         ]);
 }
 
@@ -50,6 +56,11 @@ class ProdukResource extends Resource
             Tables\Columns\TextColumn::make('NamaProduk')->label('Nama Produk')->searchable(),
             Tables\Columns\TextColumn::make('Harga')->label('Harga')->money('IDR', true),
             Tables\Columns\TextColumn::make('Stok')->label('Stok'),
+
+            Tables\Columns\ImageColumn::make('FotoURL')
+                ->label('Foto')
+                ->size(60)
+
         ])
         ->filters([
             //
