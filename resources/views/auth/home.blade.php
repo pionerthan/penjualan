@@ -48,8 +48,8 @@
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
-            margin: 20px;
-            padding: 30px;
+            margin: 20px 60px; /* Increased horizontal margin */
+            padding: 40px 60px; /* Increased horizontal padding */
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -118,22 +118,25 @@
 
         .produk-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly smaller min width */
+            gap: 20px; /* Reduced gap */
+            margin: 30px 40px; /* Added horizontal margin to grid */
+            padding: 0 20px; /* Added padding to grid */
         }
 
         .produk-card {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            padding: 25px;
+            border-radius: 16px; /* Slightly smaller border radius */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+            padding: 20px; /* Reduced padding */
             text-align: center;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 320px; /* Added max width */
+            margin: 0 auto; /* Center the cards */
         }
 
         .produk-card::before {
@@ -152,27 +155,27 @@
         }
 
         .produk-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px) scale(1.02); /* Reduced hover effect */
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); /* Reduced shadow */
         }
 
         .produk-card img {
             max-width: 100%;
-            max-height: 180px;
+            max-height: 150px; /* Reduced image height */
             object-fit: cover;
-            margin-bottom: 15px;
-            border-radius: 15px;
+            margin-bottom: 12px; /* Reduced margin */
+            border-radius: 12px; /* Reduced border radius */
             transition: transform 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1); /* Reduced shadow */
         }
 
         .produk-card:hover img {
-            transform: scale(1.05);
+            transform: scale(1.03); /* Reduced scale effect */
         }
 
         .produk-card h3 {
-            margin: 15px 0 10px;
-            font-size: 1.4rem;
+            margin: 12px 0 8px; /* Reduced margins */
+            font-size: 1.2rem; /* Reduced font size */
             color: #2c3e50;
             font-weight: 700;
             background: linear-gradient(45deg, #3498db, #8e44ad);
@@ -184,46 +187,46 @@
         .price-tag {
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
-            padding: 8px 15px;
-            border-radius: 25px;
-            font-size: 1.1rem;
+            padding: 6px 12px; /* Reduced padding */
+            border-radius: 20px; /* Reduced border radius */
+            font-size: 1rem; /* Reduced font size */
             font-weight: bold;
             display: inline-block;
-            margin: 10px 0;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            margin: 8px 0; /* Reduced margin */
+            box-shadow: 0 3px 12px rgba(255, 107, 107, 0.3); /* Reduced shadow */
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
-            50% { box-shadow: 0 4px 25px rgba(255, 107, 107, 0.6); }
-            100% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+            0% { box-shadow: 0 3px 12px rgba(255, 107, 107, 0.3); }
+            50% { box-shadow: 0 3px 20px rgba(255, 107, 107, 0.6); }
+            100% { box-shadow: 0 3px 12px rgba(255, 107, 107, 0.3); }
         }
 
         .stock-info {
             background: linear-gradient(45deg, #74b9ff, #0984e3);
             color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.9rem;
+            padding: 4px 10px; /* Reduced padding */
+            border-radius: 12px; /* Reduced border radius */
+            font-size: 0.85rem; /* Reduced font size */
             display: inline-block;
-            margin: 5px 0;
+            margin: 4px 0; /* Reduced margin */
         }
 
         .form-section {
-            margin-top: 20px;
-            padding-top: 20px;
+            margin-top: 15px; /* Reduced margin */
+            padding-top: 15px; /* Reduced padding */
             border-top: 2px solid #ecf0f1;
         }
 
         .produk-card input,
         .produk-card select {
-            margin: 8px 0;
-            padding: 12px;
+            margin: 6px 0; /* Reduced margin */
+            padding: 10px; /* Reduced padding */
             width: 100%;
             border: 2px solid #ddd;
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 10px; /* Reduced border radius */
+            font-size: 0.9rem; /* Reduced font size */
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.9);
         }
@@ -232,48 +235,48 @@
         .produk-card select:focus {
             outline: none;
             border-color: #3498db;
-            box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
-            transform: translateY(-2px);
+            box-shadow: 0 0 12px rgba(52, 152, 219, 0.3); /* Reduced shadow */
+            transform: translateY(-1px); /* Reduced transform */
         }
 
         .btn {
-            margin: 8px 0;
-            padding: 12px 20px;
+            margin: 6px 0; /* Reduced margin */
+            padding: 10px 16px; /* Reduced padding */
             width: 100%;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 10px; /* Reduced border radius */
+            font-size: 0.9rem; /* Reduced font size */
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px; /* Reduced letter spacing */
         }
 
         .btn-primary {
             background: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 3px 12px rgba(52, 152, 219, 0.3); /* Reduced shadow */
         }
 
         .btn-primary:hover {
             background: linear-gradient(45deg, #2980b9, #1f5f99);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.5);
+            transform: translateY(-2px); /* Reduced transform */
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5); /* Reduced shadow */
         }
 
         .btn-secondary {
             background: linear-gradient(45deg, #f39c12, #e67e22);
             color: white;
-            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+            box-shadow: 0 3px 12px rgba(243, 156, 18, 0.3); /* Reduced shadow */
         }
 
         .btn-secondary:hover {
             background: linear-gradient(45deg, #e67e22, #d35400);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.5);
+            transform: translateY(-2px); /* Reduced transform */
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.5); /* Reduced shadow */
         }
 
         .btn::before {
@@ -292,9 +295,9 @@
         }
 
         .footer-actions {
-            margin-top: 50px;
+            margin: 40px 40px 20px; /* Added horizontal margin */
             text-align: center;
-            padding: 30px;
+            padding: 25px 40px; /* Added horizontal padding */
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             backdrop-filter: blur(10px);
@@ -303,31 +306,32 @@
         .footer-actions a {
             display: inline-block;
             margin: 10px 15px;
-            padding: 15px 30px;
+            padding: 12px 25px; /* Reduced padding */
             background: linear-gradient(45deg, #6c5ce7, #a29bfe);
             color: white;
             text-decoration: none;
-            border-radius: 25px;
+            border-radius: 20px; /* Reduced border radius */
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem; /* Reduced font size */
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+            box-shadow: 0 3px 12px rgba(108, 92, 231, 0.3); /* Reduced shadow */
         }
 
         .footer-actions a:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5);
+            transform: translateY(-3px); /* Reduced transform */
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.5); /* Reduced shadow */
             background: linear-gradient(45deg, #5f3dc4, #6c5ce7);
         }
 
         .login-prompt {
             background: linear-gradient(45deg, #fd79a8, #e84393);
             color: white;
-            padding: 15px;
-            border-radius: 15px;
+            padding: 12px; /* Reduced padding */
+            border-radius: 12px; /* Reduced border radius */
             text-align: center;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(253, 121, 168, 0.3);
+            font-size: 0.9rem; /* Reduced font size */
+            box-shadow: 0 3px 12px rgba(253, 121, 168, 0.3); /* Reduced shadow */
         }
 
         .login-prompt a {
@@ -344,9 +348,9 @@
         /* Loading animation */
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            width: 16px; /* Reduced size */
+            height: 16px; /* Reduced size */
+            border: 2px solid rgba(255, 255, 255, 0.3); /* Reduced border */
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
@@ -357,10 +361,27 @@
         }
 
         /* Responsive design */
+        @media (max-width: 1200px) {
+            .container {
+                margin: 20px 40px; /* Reduced margin for large screens */
+                padding: 30px 40px; /* Reduced padding for large screens */
+            }
+            
+            .produk-grid {
+                margin: 20px 20px; /* Reduced margin */
+                padding: 0 10px; /* Reduced padding */
+            }
+            
+            .footer-actions {
+                margin: 30px 20px 20px; /* Reduced margin */
+                padding: 20px 30px; /* Reduced padding */
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
-                margin: 10px;
-                padding: 20px;
+                margin: 10px 20px; /* Further reduced for tablets */
+                padding: 20px 25px; /* Further reduced padding */
             }
             
             .header h2 {
@@ -368,13 +389,43 @@
             }
             
             .produk-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 20px;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Smaller min width for mobile */
+                gap: 15px; /* Reduced gap */
+                margin: 20px 10px; /* Reduced margin */
+                padding: 0 5px; /* Reduced padding */
+            }
+            
+            .produk-card {
+                max-width: none; /* Remove max width on mobile */
+                padding: 15px; /* Further reduced padding */
+            }
+            
+            .footer-actions {
+                margin: 20px 10px; /* Reduced margin */
+                padding: 20px 15px; /* Reduced padding */
             }
             
             .footer-actions a {
                 display: block;
-                margin: 10px 0;
+                margin: 8px 0; /* Reduced margin */
+                padding: 10px 20px; /* Reduced padding */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px; /* Minimal margin for small screens */
+                padding: 15px 20px; /* Minimal padding */
+            }
+            
+            .produk-grid {
+                grid-template-columns: 1fr; /* Single column */
+                margin: 15px 5px; /* Minimal margin */
+                padding: 0; /* No padding */
+            }
+            
+            .produk-card {
+                padding: 12px; /* Minimal padding */
             }
         }
 
@@ -384,19 +435,19 @@
             display: flex;
             align-items: center;
             background: #f8f9fa;
-            border-radius: 12px;
+            border-radius: 10px; /* Reduced border radius */
             overflow: hidden;
-            margin: 10px 0;
+            margin: 8px 0; /* Reduced margin */
         }
 
         .quantity-btn {
             background: #3498db;
             color: white;
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 35px; /* Reduced size */
+            height: 35px; /* Reduced size */
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem; /* Reduced font size */
             font-weight: bold;
             transition: background 0.3s ease;
         }
@@ -412,6 +463,7 @@
             background: transparent;
             font-weight: bold;
             margin: 0 !important;
+            font-size: 0.9rem; /* Reduced font size */
         }
     </style>
 </head>
@@ -421,7 +473,7 @@
 
     <div class="container">
         <div class="header">
-            <h2>🛍️ Modern Supermarket</h2>
+            <h2>🛍️ Lumidouce Market</h2>
             <div class="auth-area">
                 @auth
                     <span>Halo, {{ auth()->user()->name }} |</span>

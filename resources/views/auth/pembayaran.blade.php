@@ -83,23 +83,28 @@
 </head>
 <body>
 
+    {{-- Card Informasi Pembayaran --}}
     <div class="card">
         <h2>Pembayaran</h2>
 
+        {{-- Notifikasi sukses --}}
         @if(session('success'))
             <div class="success-message">
                 {{ session('success') }}
             </div>
         @endif
 
+        {{-- Informasi Pelanggan --}}
         <h3>Informasi Pelanggan</h3>
-        <p><strong>Nama:</strong> {{ $penjualan->pelanggan->NamaPelanggan }}</p>
-        <p><strong>Alamat:</strong> {{ $penjualan->pelanggan->Alamat }}</p>
-        <p><strong>No. Telepon:</strong> {{ $penjualan->pelanggan->NomorTelepon }}</p>
+        <p><strong>Nama:</strong> {{ $penjualan->pelanggan->NamaPelanggan ?? '-' }}</p>
+        <p><strong>Alamat:</strong> {{ $penjualan->pelanggan->Alamat ?? '-' }}</p>
+        <p><strong>No. Telepon:</strong> {{ $penjualan->pelanggan->NomorTelepon ?? '-' }}</p>
     </div>
 
+    {{-- Card Detail Pembelian --}}
     <div class="card">
         <h3>Detail Pembelian</h3>
+
         @if($penjualan->detailPenjualans && $penjualan->detailPenjualans->count())
             <table>
                 <thead>
@@ -116,7 +121,7 @@
                             <td>{{ $item->produk->NamaProduk ?? 'Produk tidak ditemukan' }}</td>
                             <td>Rp{{ number_format($item->produk->Harga ?? 0, 0, ',', '.') }}</td>
                             <td>{{ $item->JumlahProduk }}</td>
-                            <td>Rp{{ number_format($item->Subtotal, 0, ',', '.') }}</td>
+                            <td>Rp{{ number_format($item->Subtotal ?? 0, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -126,17 +131,18 @@
         @endif
     </div>
 
+    {{-- Card Total Pembayaran --}}
     <div class="card">
         <h3>Total Pembayaran</h3>
         <div class="highlight" id="totalBayar">
-            Rp{{ number_format($penjualan->TotalHarga, 0, ',', '.') }}
+            Rp{{ number_format($penjualan->TotalHarga ?? 0, 0, ',', '.') }}
         </div>
 
         <a href="{{ route('home') }}" class="button">🏠 Kembali ke Beranda</a>
     </div>
 
+    {{-- Script Highlight Efek --}}
     <script>
-        // Efek flash highlight total
         document.addEventListener("DOMContentLoaded", function() {
             const totalDiv = document.getElementById('totalBayar');
             totalDiv.style.backgroundColor = '#ffeaa7';

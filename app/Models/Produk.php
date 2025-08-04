@@ -15,6 +15,8 @@ class Produk extends Model
         'NamaProduk',
         'Harga',
         'Stok',
+        'FotoURL',
+
     ];
 
     // Relasi ke detail penjualan
