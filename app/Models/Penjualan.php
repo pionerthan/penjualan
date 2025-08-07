@@ -16,6 +16,7 @@ class Penjualan extends Model
         'TanggalPenjualan',
         'TotalHarga',
         'PelangganID',
+        'Pajak',
     ];
 
     // Relasi ke pelanggan (many-to-one)
@@ -29,4 +30,12 @@ class Penjualan extends Model
     {
         return $this->hasMany(DetailPenjualan::class, 'PenjualanID', 'PenjualanID');
     }
+
+    protected static function booted()
+{
+    static::creating(function ($penjualan) {
+        $penjualan->TanggalPenjualan = now()->format('Y-m-d');
+    });
+}
+
 }

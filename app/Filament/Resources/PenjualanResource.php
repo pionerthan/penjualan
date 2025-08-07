@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PenjualanResource\Pages;
 use App\Models\Penjualan;
 use Filament\Forms;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -17,6 +18,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Tables\Columns\TextColumn;
 use App\Models\Produk;
 
+
 class PenjualanResource extends Resource
 {
     protected static ?string $model = Penjualan::class;
@@ -27,9 +29,11 @@ class PenjualanResource extends Resource
 {
     return $form
         ->schema([
-            DatePicker::make('TanggalPenjualan')
+            TextInput::make('TanggalPenjualan')
                 ->label('Tanggal Penjualan')
-                ->required(),
+                ->default(now()->format('Y-m-d H:i:s'))
+                ->disabled()
+                ->dehydrated(false),
 
             Select::make('PelangganID')
                 ->label('Pelanggan')
@@ -41,7 +45,22 @@ class PenjualanResource extends Resource
                 ->label('Total Harga')
                 ->prefix('Rp')
                 ->disabled()
+                ->dehydrated()
+                ->reactive()
+                ->afterStateUpdated(function ($state, callable $set){
+                    $set('Pajak', $state * 0.11);
+                }),
+
+            TextInput::make('Pajak')
+                ->label('pajak (11%)')
+                ->disabled()
+                ->numeric()
+                ->prefix('Rp')
+                ->reactive()
                 ->dehydrated(),
+                
+
+            
 
             Repeater::make('detailPenjualans')
                 ->label('Detail Produk')
@@ -52,12 +71,21 @@ class PenjualanResource extends Resource
                         ->options(Produk::all()->pluck('NamaProduk', 'ProdukID'))
                         ->required()
                         ->reactive()
-                        ->afterStateUpdated(function ($state, callable $set) {
+                        ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                        ->afterStateUpdated(function ($state, callable $set, Get $get) {
                             $produk = Produk::find($state);
                             if ($produk) {
                                 $set('Harga', $produk->Harga);
                                 $set('JumlahProduk', 1);
                                 $set('Subtotal', $produk->Harga);
+
+                                $details = $get('../../detailPenjualans');
+                                $total = collect($details)->sum(fn ($item) => $item['Subtotal'] ?? 0);
+
+                                $pajak = $total * 0.11;
+
+                                $set('../../Pajak', $total * 0.11);
+                                $set('../../TotalHarga', $total + $pajak);
                             }
                         }),
 
@@ -65,30 +93,44 @@ class PenjualanResource extends Resource
                         ->label('Harga')
                         ->prefix('Rp')
                         ->disabled()
-                        ->dehydrated(),
+                        ->default(function (Get $get) {
+                            $produkId = $get('ProdukID');
+                            return $produkId ? Produk::find($produkId)?->Harga : null;
+                        })
+                        ->formatStateusing(function ($state, $record) {
+                            if ($state) {
+                                return $state;
+                            }
+                            if ($record?->ProdukID) {
+                                return Produk::find($record->ProdukID)?->Harga;
+                            }
+                            return null;
+                        }),
 
                     TextInput::make('JumlahProduk')
                         ->label('Jumlah')
                         ->numeric()
                         ->minValue(1)
+                        ->default(1)
                         ->required()
                         ->reactive()
-                        ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        ->afterStateUpdated(function ($state, callable $set, Get $get) {
                             $harga = $get('Harga') ?? 0;
                             $subtotal = $harga * (int) $state;
                             $set('Subtotal', $subtotal);
 
-                            // update total harga
                             $details = $get('../../detailPenjualans');
                             $total = collect($details)->sum(fn ($item) => $item['Subtotal'] ?? 0);
                             $set('../../TotalHarga', $total);
+                            $set('../Pajak', $total * 0.11);
                         }),
 
                     TextInput::make('Subtotal')
                         ->label('Subtotal')
                         ->prefix('Rp')
                         ->disabled()
-                        ->dehydrated(),
+                        ->dehydrated()
+                        ->reactive(),
                 ])
                 ->columns(3)
                 ->required()
@@ -129,5 +171,19 @@ class PenjualanResource extends Resource
             'create' => Pages\CreatePenjualan::route('/create'),
             'edit' => Pages\EditPenjualan::route('/{record}/edit'),
         ];
+    }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $total = $data['TotalHarga'] ?? 0;
+        $data['Pajak'] = $total * 0.11;
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $total = $data['TotalHarga'] ?? 0;
+        $data['Pajak'] = $total * 0.11;
+        return $data;
     }
 }
