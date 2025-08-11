@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Session;
 
 class TransaksiController extends Controller
 {
-    /**
-     * Menampilkan halaman checkout keranjang.
-     */
     public function checkout()
     {
         $keranjang = Session::get('keranjang', []);
@@ -24,6 +21,13 @@ class TransaksiController extends Controller
 
         $produkIDs = array_keys($keranjang);
         $produks = Produk::whereIn('ProdukID', $produkIDs)->get();
+
+        foreach ($produks as $produk) {
+            if ($produk->status !== 'active') {
+                return redirect()->route('keranjang.index')
+                    ->with('error', "Produk {$produk->NamaProduk} tidak tersedia untuk dibeli.");
+            }
+        }
 
         return view('auth.checkout', compact('produks', 'keranjang'));
     }

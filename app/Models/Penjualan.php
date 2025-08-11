@@ -32,10 +32,15 @@ class Penjualan extends Model
     }
 
     protected static function booted()
-{
+    {
     static::creating(function ($penjualan) {
         $penjualan->TanggalPenjualan = now()->format('Y-m-d');
     });
-}
+    }
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class, 'voucher_id');
+    }
 
 }

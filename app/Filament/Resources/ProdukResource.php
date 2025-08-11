@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Filters\SelectFilter;
 
 
 class ProdukResource extends Resource
@@ -45,6 +47,15 @@ class ProdukResource extends Resource
             ->placeholder('https://example.com/foto.jpg')
             ->url() // validasi bahwa ini URL
             ->maxLength(2048),
+
+            Forms\Components\Select::make('status')
+                ->label('Status')
+                ->options([
+                    'active' => 'Active',
+                    'inactive' => 'Inactive',
+                ])
+                ->default('active')
+                ->required(),
         ]);
 }
 
@@ -56,20 +67,45 @@ class ProdukResource extends Resource
             Tables\Columns\TextColumn::make('NamaProduk')->label('Nama Produk')->searchable(),
             Tables\Columns\TextColumn::make('Harga')->label('Harga')->money('IDR', true),
             Tables\Columns\TextColumn::make('Stok')->label('Stok'),
-
             Tables\Columns\ImageColumn::make('FotoURL')
                 ->label('Foto')
-                ->size(60)
+                ->size(60),
+            BadgeColumn::make('status')
+                ->label('Status')
+                ->colors([
+                    'success' => 'active',
+                    'danger' => 'inactive',
+                ])
+                ->sortable(),
+
+            BadgeColumn::make('status_stok')
+                ->label('Status Stok')
+                ->colors([
+                    'success' => 'active',
+                    'danger' => 'inactive',
+                ])
+                ->sortable(),
 
         ])
         ->filters([
-            //
+            SelectFilter::make('status')
+                ->options([
+                    'active' => 'Active',
+                    'inactive' => 'Inactive',
+                ]),
+            SelectFilter::make('status_stok')
+                ->label('Status Stok')
+                ->options([
+                    'active' => 'Active',
+                    'inactive' => 'Inactive',
+                ]), 
+
         ])
         ->actions([
-    Tables\Actions\ViewAction::make(),
-    Tables\Actions\EditAction::make(),
-    Tables\Actions\DeleteAction::make(),
-])
+            Tables\Actions\ViewAction::make(),
+            Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make(),
+        ])
         ->bulkActions([
             Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),

@@ -18,7 +18,7 @@ class ProdukController extends Controller
             abort(403, 'Halaman hanya untuk pembeli');
         }
 
-        $produk = Produk::all();
+        $produk = Produk::where('status', 'active')->get();
         $pelanggans = Pelanggan::where('user_id', Auth::id())->get();
 
         return view('auth.home', compact('produk', 'pelanggans'));

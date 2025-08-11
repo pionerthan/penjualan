@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 use Filament\Tables\Columns\TextColumn;
@@ -32,8 +33,7 @@ class PenjualanResource extends Resource
             TextInput::make('TanggalPenjualan')
                 ->label('Tanggal Penjualan')
                 ->default(now()->format('Y-m-d H:i:s'))
-                ->disabled()
-                ->dehydrated(false),
+                ->readOnly(),
 
             Select::make('PelangganID')
                 ->label('Pelanggan')
@@ -58,9 +58,40 @@ class PenjualanResource extends Resource
                 ->prefix('Rp')
                 ->reactive()
                 ->dehydrated(),
-                
 
-            
+            Select::make('voucher_id')
+                ->label('kode_voucher')
+                ->relationship('voucher', 'kode_voucher', fn ($query) =>
+                    $query->whereDate('mulai_berlaku', '<=', now())
+                          ->whereDate('kadaluarsa', '>=', now())
+                          ->where(function($q){
+                            $q->whereColumn('digunakan', '<', 'limit_penggunaan')
+                              ->orWhere('limit_penggunaan', 0);
+                          })
+                    )
+                    ->searchable()
+                    ->nullable()        
+                    ->reactive()        
+                    ->afterStateUpdated(function($state, callable $set, Get $get) {
+                        $details = $get('detailPenjualans');
+                        $subtotal = collect($details)->sum(fn ($item) => $item['Subtotal'] ?? 0);
+
+                        $pajak = $subtotal * 0.11;
+                        $totalSetelahPajak = $subtotal + $pajak;
+
+                        $diskonPersen = 0;
+                        if ($state) {
+                            $voucher = \App\Models\Voucher::find($state);
+                            if ($voucher) {
+                                $diskonPersen = $voucher->diskon_persen ?? 0;
+                            }
+                        }
+
+                        $totalAkhir = $totalSetelahPajak - ($totalSetelahPajak * ($diskonPersen / 100));
+
+                        $set('Pajak', $pajak);
+                        $set('TotalHarga', $totalAkhir);
+                    }),      
 
             Repeater::make('detailPenjualans')
                 ->label('Detail Produk')
@@ -81,11 +112,25 @@ class PenjualanResource extends Resource
 
                                 $details = $get('../../detailPenjualans');
                                 $total = collect($details)->sum(fn ($item) => $item['Subtotal'] ?? 0);
-
+                                
                                 $pajak = $total * 0.11;
 
                                 $set('../../Pajak', $total * 0.11);
                                 $set('../../TotalHarga', $total + $pajak);
+
+                                $voucherCode = $get('../../VoucherKode');
+                                if ($voucherCode) {
+                                    $voucher = \App\models\Voucher::where('kode', $voucherCode)->first();
+                                    if ($voucher && $voucher->digunakan < $voucher->maksimum_penggunaan) {
+                                        $diskon = ($voucher->tipe === 'persen')
+                                            ? ($total * $voucher->nilai / 100)
+                                            : $voucher->nilai;
+
+                                        $totalSetelahDiskon = max(0, ($total + $pajak) - $diskon);
+
+                                        $set('../../TotalHarga', $totalSetelahDiskon);
+                                    }
+                                }
                             }
                         }),
 
@@ -123,6 +168,20 @@ class PenjualanResource extends Resource
                             $total = collect($details)->sum(fn ($item) => $item['Subtotal'] ?? 0);
                             $set('../../TotalHarga', $total);
                             $set('../Pajak', $total * 0.11);
+
+                            $voucherCode = $get('../../VoucherKode');
+                                if ($voucherCode) {
+                                    $voucher = \App\models\Voucher::where('kode', $voucherCode)->first();
+                                    if ($voucher && $voucher->digunakan < $voucher->maksimum_penggunaan) {
+                                        $diskon = ($voucher->tipe === 'persen')
+                                            ? ($total * $voucher->nilai / 100)
+                                            : $voucher->nilai;
+
+                                        $totalSetelahDiskon = max(0, ($total + $pajak) - $diskon);
+
+                                        $set('../../TotalHarga', $totalSetelahDiskon);
+                                    }
+                                }
                         }),
 
                     TextInput::make('Subtotal')
@@ -173,12 +232,7 @@ class PenjualanResource extends Resource
         ];
     }
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        $total = $data['TotalHarga'] ?? 0;
-        $data['Pajak'] = $total * 0.11;
-        return $data;
-    }
+    
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
