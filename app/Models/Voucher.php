@@ -6,13 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Voucher extends Model
 {
-    protected $fillsble = [
+    protected $fillable = [
         'kode_voucher',
         'diskon_persen',
         'mulai_berlaku',
         'kadaluarsa',
         'limit_penggunaan',
         'digunakan',
+    ];
+
+    protected $atttibutes = [
+        'digunakan' => 0,
     ];
 
     public function isValid(): bool

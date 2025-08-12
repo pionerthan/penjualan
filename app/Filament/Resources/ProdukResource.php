@@ -40,7 +40,15 @@ class ProdukResource extends Resource
 
             Forms\Components\TextInput::make('Stok')
                 ->numeric()
-                ->required(),
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(function ($state, callable $set, callable $get, $component) {
+                    if ($state == 0) {
+                        $component->helperText('⚠️ Produk akan otomatis berstatus OUTSTOCK jika stok = 0.');
+                    } else {
+                        $component->helperText('');
+                    }
+                }),
 
             Forms\Components\TextInput::make('FotoURL')
             ->label('URL Foto Produk')

@@ -87,11 +87,23 @@ class PenjualanResource extends Resource
                             }
                         }
 
+                        $diskonNominal = $totalSetelahPajak * ($diskonPersen / 100);
                         $totalAkhir = $totalSetelahPajak - ($totalSetelahPajak * ($diskonPersen / 100));
 
+                        $set('diskon_persen', $diskonPersen);
+                        $set('harga_setelah_diskon', $diskonNominal);
                         $set('Pajak', $pajak);
                         $set('TotalHarga', $totalAkhir);
-                    }),      
+                    }),
+                    
+            TextInput::make('diskon_persen')
+                ->label('Diskon (%)')
+                ->disabled(),
+
+            TextInput::make('harga_setelah_diskon')
+                ->label('Diskon')
+                ->prefix('Rp')
+                ->disabled(),
 
             Repeater::make('detailPenjualans')
                 ->label('Detail Produk')
@@ -114,23 +126,26 @@ class PenjualanResource extends Resource
                                 $total = collect($details)->sum(fn ($item) => $item['Subtotal'] ?? 0);
                                 
                                 $pajak = $total * 0.11;
+                                $set('../../Pajak', $pajak);
 
-                                $set('../../Pajak', $total * 0.11);
-                                $set('../../TotalHarga', $total + $pajak);
+                                $totalAkhir = $total + $pajak;
 
-                                $voucherCode = $get('../../VoucherKode');
-                                if ($voucherCode) {
-                                    $voucher = \App\models\Voucher::where('kode', $voucherCode)->first();
-                                    if ($voucher && $voucher->digunakan < $voucher->maksimum_penggunaan) {
-                                        $diskon = ($voucher->tipe === 'persen')
-                                            ? ($total * $voucher->nilai / 100)
-                                            : $voucher->nilai;
+                                $diskonNominal = 0;
+                                $voucherId = $get('../../voucher_id');
+                                if ($voucherId) {
+                                    $voucher = \App\Models\Voucher::find($voucherId);
+                                    if ($voucher) {
+                                        $diskonPersen = $voucher->diskon_persen ?? 0;
+                                        $diskonNominal = $totalAkhir * ($diskonPersen / 100);
 
-                                        $totalSetelahDiskon = max(0, ($total + $pajak) - $diskon);
-
-                                        $set('../../TotalHarga', $totalSetelahDiskon);
+                                        $set('../../diskon_persen', $diskonPersen);
+                                        $set('../../harga_setelah_diskon', $diskonNominal);
                                     }
                                 }
+
+                                $totalAkhir -= $diskonNominal;
+                                $set('../../TotalHarga', max(0, $totalAkhir));
+
                             }
                         }),
 
@@ -167,21 +182,25 @@ class PenjualanResource extends Resource
                             $details = $get('../../detailPenjualans');
                             $total = collect($details)->sum(fn ($item) => $item['Subtotal'] ?? 0);
                             $set('../../TotalHarga', $total);
-                            $set('../Pajak', $total * 0.11);
+                            $set('../../Pajak', $pajak);
 
-                            $voucherCode = $get('../../VoucherKode');
-                                if ($voucherCode) {
-                                    $voucher = \App\models\Voucher::where('kode', $voucherCode)->first();
-                                    if ($voucher && $voucher->digunakan < $voucher->maksimum_penggunaan) {
-                                        $diskon = ($voucher->tipe === 'persen')
-                                            ? ($total * $voucher->nilai / 100)
-                                            : $voucher->nilai;
+                                $totalAkhir = $total + $pajak;
 
-                                        $totalSetelahDiskon = max(0, ($total + $pajak) - $diskon);
+                                $diskonNominal = 0;
+                                $voucherId = $get('../../voucher_id');
+                                if ($voucherId) {
+                                    $voucher = \App\Models\Voucher::find($voucherId);
+                                    if ($voucher) {
+                                        $diskonPersen = $voucher->diskon_persen ?? 0;
+                                        $diskonNominal = $totalAkhir * ($diskonPersen / 100);
 
-                                        $set('../../TotalHarga', $totalSetelahDiskon);
+                                        $set('../../diskon_persen', $diskonPersen);
+                                        $set('../../harga_setelah_diskon', $diskonNominal);
                                     }
                                 }
+
+                                $totalAkhir -= $diskonNominal;
+                                $set('../../TotalHarga', max(0, $totalAkhir));
                         }),
 
                     TextInput::make('Subtotal')
