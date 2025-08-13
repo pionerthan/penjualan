@@ -71,7 +71,7 @@ class PelangganResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\PenjualansRelationManager::class,
         ];
     }
 
@@ -80,6 +80,7 @@ class PelangganResource extends Resource
         return [
             'index' => Pages\ListPelanggans::route('/'),
             'create' => Pages\CreatePelanggan::route('/create'),
+            'view' => Pages\ViewPelanggan::route('/{record}'),
             'edit' => Pages\EditPelanggan::route('/{record}/edit'),
         ];
     }
