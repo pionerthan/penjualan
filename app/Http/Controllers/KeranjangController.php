@@ -30,7 +30,7 @@ class KeranjangController extends Controller
         $produkId = $request->produk_id;
         $jumlah = $request->jumlah;
 
-        $produk = Produk::dinfOrFail($produkID);
+        $produk = Produk::findOrFail($produkId);
 
         if ($produk->status !== 'active') {
             return back()->with('error', 'Produk ini tidak tersedia untuk dibeli.');
