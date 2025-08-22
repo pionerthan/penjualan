@@ -475,6 +475,18 @@
                     <td colspan="4"><strong>Total</strong></td>
                     <td colspan="2"><strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></td>
                 </tr>
+                <tr>
+                    <td colspan="4"><strong>Total</strong></td>
+                    <td colspan="2">
+                        <input type="text" id="voucherCode" name="voucher" placeholder="Masukan kode voucher">
+                        <button type="button" id="applyVoucher">Gunakan</button>
+                        <div id="voucherMessage" style="color: red; font-size: 14px; margin-top: 5pc;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4"><strong>Total Setelah Diskon</strong></td>
+                    <td colspan="2"><strong id="totalDiskon">Rp {{ number_format($total, 0, ',', '.') }} </strong> </td>
+                </tr>
             </tbody>
         </table>
 
@@ -690,4 +702,39 @@
     });
 </script>
 
+@endsection
+
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("#applyVoucher").click(function(){
+        let kode = $("#voucherCode").val();
+
+        if(kode.length === 0) {
+            $("#voucherMessage").text("⚠️ Masukkan kode voucher terlebih dahulu!");
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('voucher.cek') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                kode: kode,
+                total: {{ $total }}
+            },
+            success: function(res){
+                if(res.success){
+                    $("#voucherMessage").css("color","green").text("✅ Voucher berhasil digunakan!");
+                    $("#totalDiskon").text("Rp " + new Intl.NumberFormat('id-ID').format(res.total_setelah_diskon));
+                } else {
+                    $("#voucherMessage").css("color","red").text("❌ " + res.message);
+                    $("#totalDiskon").text("Rp " + new Intl.NumberFormat('id-ID').format({{ $total }}));
+                }
+            }
+        });
+    });
+});
+</script>
 @endsection

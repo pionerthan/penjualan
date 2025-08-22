@@ -38,5 +38,8 @@
         <hr>
         <p>&copy; {{ date('Y') }} Toko Online</p>
     </footer>
+
+    {{-- Tempat menaruh script dari child view --}}
+    @yield('scripts')
 </body>
 </html>
