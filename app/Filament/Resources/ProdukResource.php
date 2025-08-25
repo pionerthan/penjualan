@@ -135,6 +135,7 @@ class ProdukResource extends Resource
             'index' => Pages\ListProduks::route('/'),
             'create' => Pages\CreateProduk::route('/create'),
             'edit' => Pages\EditProduk::route('/{record}/edit'),
+            'scan' => Pages\ScanProduk::route('/scan'),
         ];
     }
 }
