@@ -450,44 +450,45 @@
                 </tr>
             </thead>
             <tbody>
-                @php $total = 0; @endphp
-                @foreach ($produks as $produk)
-                    @php
-                        $jumlah = $keranjang[$produk->ProdukID];
-                        $subtotal = $produk->Harga * $jumlah;
-                        $total += $subtotal;
-                    @endphp
-                    <tr>
-                        <td><img src="{{ $produk->FotoURL }}" alt="{{ $produk->NamaProduk }}"></td>
-                        <td>{{ $produk->NamaProduk }}</td>
-                        <td>Rp {{ number_format($produk->Harga, 0, ',', '.') }}</td>
-                        <td>{{ $jumlah }}</td>
-                        <td>Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
-                        <td class="actions">
-                            <form action="{{ route('keranjang.hapus', $produk->ProdukID) }}" method="POST" onsubmit="return confirm('Hapus produk ini dari keranjang?')" style="display:inline;">
-                                @csrf
-                                <button type="submit" class="danger">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-                <tr>
-                    <td colspan="4"><strong>Total</strong></td>
-                    <td colspan="2"><strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="4"><strong>Total</strong></td>
-                    <td colspan="2">
-                        <input type="text" id="voucherCode" name="voucher" placeholder="Masukan kode voucher">
-                        <button type="button" id="applyVoucher">Gunakan</button>
-                        <div id="voucherMessage" style="color: red; font-size: 14px; margin-top: 5pc;"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4"><strong>Total Setelah Diskon</strong></td>
-                    <td colspan="2"><strong id="totalDiskon">Rp {{ number_format($total, 0, ',', '.') }} </strong> </td>
-                </tr>
-            </tbody>
+    @php $totalLoop = 0; @endphp
+    @foreach ($produks as $produk)
+        @php
+            $jumlah = $keranjang[$produk->ProdukID];
+            $subtotal = $produk->Harga * $jumlah;
+            $totalLoop += $subtotal;
+        @endphp
+        <tr>
+            <td><img src="{{ $produk->FotoURL }}" alt="{{ $produk->NamaProduk }}"></td>
+            <td>{{ $produk->NamaProduk }}</td>
+            <td>Rp {{ number_format($produk->Harga, 0, ',', '.') }}</td>
+            <td>{{ $jumlah }}</td>
+            <td>Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+            <td class="actions">
+                <form action="{{ route('keranjang.hapus', $produk->ProdukID) }}" method="POST" onsubmit="return confirm('Hapus produk ini dari keranjang?')" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="danger">Hapus</button>
+                </form>
+            </td>
+        </tr>
+    @endforeach
+    <tr>
+        <td colspan="4"><strong>Total</strong></td>
+        <td colspan="2"><strong>Rp {{ number_format($totalLoop, 0, ',', '.') }}</strong></td>
+    </tr>
+    <tr>
+        <td colspan="4"><strong>Masukkan Kode Voucher</strong></td>
+        <td colspan="2">
+            <input type="text" id="voucherCode" name="voucher" placeholder="Masukan kode voucher">
+            <button type="button" id="applyVoucher">Gunakan</button>
+            <div id="voucherMessage" style="color: red; font-size: 14px; margin-top: 5px;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4"><strong>Total Setelah Diskon</strong></td>
+        <td colspan="2"><strong id="totalDiskon">Rp {{ number_format($totalLoop, 0, ',', '.') }}</strong></td>
+    </tr>
+</tbody>
+
         </table>
 
         <div class="actions" style="margin-bottom: 30px;">
@@ -722,7 +723,7 @@ $(document).ready(function(){
             data: {
                 _token: "{{ csrf_token() }}",
                 kode: kode,
-                total: {{ $total }}
+                total: {{ $totalLoop ?? 0 }}
             },
             success: function(res){
                 if(res.success){
@@ -730,7 +731,7 @@ $(document).ready(function(){
                     $("#totalDiskon").text("Rp " + new Intl.NumberFormat('id-ID').format(res.total_setelah_diskon));
                 } else {
                     $("#voucherMessage").css("color","red").text("❌ " + res.message);
-                    $("#totalDiskon").text("Rp " + new Intl.NumberFormat('id-ID').format({{ $total }}));
+                    $("#totalDiskon").text("Rp " + new Intl.NumberFormat('id-ID').format({{ $totalLoop ?? 0 }}));
                 }
             }
         });
