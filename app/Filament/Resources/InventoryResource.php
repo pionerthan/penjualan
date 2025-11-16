@@ -2,28 +2,26 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\InventoryResource\Pages;
 use App\Models\Inventory;
 use App\Models\Produk;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Tables;
+use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
-use Filament\Tables;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
-use App\Filament\Resources\InventoryResource\Pages;
 
 class InventoryResource extends Resource
 {
     protected static ?string $model = Inventory::class;
 
-    protected static ?string $navigationLabel = 'Inventory';
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
-    protected static ?string $pluralLabel = 'Inventory';
-    protected static ?string $navigationGroup = 'Manajemen Stok';
+    protected static ?string $navigationGroup = 'Manajemen Produk';
+    protected static ?string $navigationLabel = 'Inventory';
 
-    public static function form(Form $form): Form
+    public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
             Select::make('produk_id')
@@ -32,36 +30,33 @@ class InventoryResource extends Resource
                 ->searchable()
                 ->required(),
 
-            TextInput::make('jumlah')
-                ->numeric()
-                ->minValue(1)
+            Select::make('tipe')
+                ->label('Tipe Transaksi')
+                ->options([
+                    'in' => 'Stok Masuk',
+                    'out' => 'Stok Keluar'
+                ])
                 ->required(),
 
-            TextInput::make('sumber')
-                ->label('Sumber Distributor')
-                ->nullable(),
+            TextInput::make('qty')
+                ->label('Jumlah')
+                ->numeric()
+                ->required(),
 
-            TextInput::make('keterangan')
+            Textarea::make('keterangan')
                 ->label('Keterangan')
-                ->nullable(),
+                ->rows(3),
         ]);
     }
 
-    public static function table(Table $table): Table
+    public static function table(Tables\Table $table): Tables\Table
     {
         return $table->columns([
-            TextColumn::make('id')->sortable(),
             TextColumn::make('produk.NamaProduk')->label('Produk'),
-            TextColumn::make('jumlah')->label('Jumlah'),
-            TextColumn::make('sumber'),
-            TextColumn::make('keterangan'),
-            TextColumn::make('created_at')->dateTime(),
+            TextColumn::make('tipe')->label('Tipe'),
+            TextColumn::make('qty')->label('Jumlah'),
+            TextColumn::make('created_at')->dateTime('d/m/Y'),
         ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [];
     }
 
     public static function getPages(): array
@@ -69,7 +64,6 @@ class InventoryResource extends Resource
         return [
             'index' => Pages\ListInventories::route('/'),
             'create' => Pages\CreateInventory::route('/create'),
-            'edit' => Pages\EditInventory::route('/{record}/edit'),
         ];
     }
 }

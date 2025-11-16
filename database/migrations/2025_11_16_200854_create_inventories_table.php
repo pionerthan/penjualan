@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('penjualan', function (Blueprint $table) {
-            // Menambahkan kolom timestamps (created_at & updated_at)
+        Schema::create('inventories', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('produk_id')->constrained('produk')->onDelete('cascade');
+            $table->integer('stock')->default(0);
             $table->timestamps();
         });
     }
@@ -22,9 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('penjualan', function (Blueprint $table) {
-            // Menghapus kolom timestamps
-            $table->dropTimestamps();
-        });
+        Schema::dropIfExists('inventories');
     }
 };

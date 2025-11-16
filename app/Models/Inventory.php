@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Inventory extends Model
 {
     protected $fillable = [
-        'product_id',
-        'stock_in',
-        'stock_out',
-        'current_stock',
+        'produk_id',
+        'tipe',
+        'qty',
+        'keterangan',
     ];
 
-    public function product()
+    public function produk()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Produk::class, 'produk_id', 'ProdukID');
     }
 }
