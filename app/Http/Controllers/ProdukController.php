@@ -12,17 +12,57 @@ use Illuminate\Support\Facades\Auth;
 class ProdukController extends Controller
 {
     // Menampilkan halaman utama produk untuk pembeli
-    public function index()
-    {
-        if (auth()->check() && auth()->user()->role === 'kasir') {
-            abort(403, 'Halaman hanya untuk pembeli');
-        }
-
-        $produk = Produk::where('status', 'active')->get();
-        $pelanggans = Pelanggan::where('user_id', Auth::id())->get();
-
-        return view('auth.home', compact('produk', 'pelanggans'));
+    public function index(Request $request)
+{
+    if (auth()->check() && auth()->user()->role === 'kasir') {
+        abort(403, 'Halaman hanya untuk pembeli');
     }
+
+    $produk = Produk::query()
+        ->where('status', 'active')
+
+        // FILTER NAMA
+        ->when($request->search, function ($q) use ($request) {
+            $q->where('NamaProduk', 'like', '%' . $request->search . '%');
+        })
+
+        // FILTER HARGA MIN
+        ->when($request->min, function ($q) use ($request) {
+            $q->where('Harga', '>=', $request->min);
+        })
+
+        // FILTER HARGA MAX
+        ->when($request->max, function ($q) use ($request) {
+            $q->where('Harga', '<=', $request->max);
+        })
+
+        // FILTER KATEGORI
+        ->when($request->kategori, function ($q) use ($request) {
+            $q->where('kategori', $request->kategori);
+        })
+
+        // FILTER STOK TERSEDIA
+        ->when($request->stock == "1", function ($q) {
+            $q->where('Stok', '>', 0);
+        })
+
+        // SORTING
+        ->when($request->sort, function ($q) use ($request) {
+            if ($request->sort == "termurah") {
+                $q->orderBy('Harga', 'asc');
+            } elseif ($request->sort == "termahal") {
+                $q->orderBy('Harga', 'desc');
+            }
+        })
+
+        ->get();
+
+    // Pelanggan tetap
+    $pelanggans = Pelanggan::where('user_id', Auth::id())->get();
+
+    return view('auth.home', compact('produk', 'pelanggans'));
+}
+
 
     // Menampilkan form beli satu produk
     public function showBeliForm(Request $request)
