@@ -28,9 +28,12 @@ class ProdukResource extends Resource
                     ->label('Nama Produk')
                     ->required()
                     ->maxLength(255),
+<<<<<<< HEAD
                 TextInput::make('brand')
                     ->label('Brand')
                     ->maxLength(255),
+=======
+>>>>>>> 3eceda08ca25fb54a8ad6cc03c7d40295de84383
                 Select::make('kategori')
                     ->label('Kategori')
                     ->options([
@@ -82,10 +85,15 @@ class ProdukResource extends Resource
                     ->placeholder('https://example.com/foto.jpg')
                     ->url()
                     ->maxLength(2048),
+<<<<<<< HEAD
                 Forms\Components\RichEditor::make('deskripsi')
                     ->label('Deskripsi')
                     ->columnSpanFull(),
                 Select::make('status')
+=======
+
+                Forms\Components\Select::make('status')
+>>>>>>> 3eceda08ca25fb54a8ad6cc03c7d40295de84383
                     ->label('Status')
                     ->options([
                         'active' => 'Active',
@@ -102,6 +110,7 @@ class ProdukResource extends Resource
             ->columns([
                 TextColumn::make('ProdukID')->label('ID')->sortable(),
                 TextColumn::make('NamaProduk')->label('Nama Produk')->searchable(),
+<<<<<<< HEAD
                 TextColumn::make('brand')
                     ->label('Brand')
                     ->sortable()
@@ -110,6 +119,14 @@ class ProdukResource extends Resource
                     ->label('Kategori')
                     ->sortable()
                     ->searchable(),
+=======
+
+                TextColumn::make('kategori')          // ← tampilkan kategori
+                    ->label('Kategori')
+                    ->sortable()
+                    ->searchable(),
+
+>>>>>>> 3eceda08ca25fb54a8ad6cc03c7d40295de84383
                 TextColumn::make('Harga')->label('Harga')->money('IDR', true),
                 TextColumn::make('Stok')->label('Stok'),
                 Tables\Columns\ImageColumn::make('FotoURL')->label('Foto')->size(60),
@@ -129,6 +146,7 @@ class ProdukResource extends Resource
                     'active' => 'Active',
                     'inactive' => 'Inactive',
                 ]),
+<<<<<<< HEAD
                 SelectFilter::make('brand')
                     ->label('Brand')
                     ->options(
@@ -138,6 +156,9 @@ class ProdukResource extends Resource
                     ->filter()
                     ->toArray()
                 ),
+=======
+
+>>>>>>> 3eceda08ca25fb54a8ad6cc03c7d40295de84383
                 SelectFilter::make('status_stok')->label('Status Stok')->options([
                     'instock' => 'In Stock',
                     'outstock' => 'Out Stock',
