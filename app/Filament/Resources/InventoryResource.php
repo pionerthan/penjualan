@@ -46,6 +46,8 @@ class InventoryResource extends Resource
             Textarea::make('keterangan')
                 ->label('Keterangan')
                 ->rows(3),
+
+                
         ]);
     }
 
@@ -56,7 +58,22 @@ class InventoryResource extends Resource
             TextColumn::make('tipe')->label('Tipe'),
             TextColumn::make('qty')->label('Jumlah'),
             TextColumn::make('created_at')->dateTime('d/m/Y'),
-        ]);
+
+            ])
+        ->actions([
+            Tables\Actions\ViewAction::make(),
+            Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make(),
+        ])
+        ->bulkActions([]);
+
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
     }
 
     public static function getPages(): array
@@ -64,6 +81,7 @@ class InventoryResource extends Resource
         return [
             'index' => Pages\ListInventories::route('/'),
             'create' => Pages\CreateInventory::route('/create'),
+            'edit' => Pages\EditInventory::route('/{record}/edit'),
         ];
     }
 }

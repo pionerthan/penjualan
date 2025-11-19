@@ -6,6 +6,7 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\KontakController;
 
 // Halaman umum
 Route::get('/', [ProdukController::class, 'index'])->name('home');
@@ -38,7 +39,11 @@ Route::middleware('auth')->group(function () {
 
     // web.php
     Route::get('/pelanggan/cari', [TransaksiController::class, 'cariPelanggan'])->name('pelanggan.cari');
-
     Route::post('/voucher/cek', [VoucherController::class, 'cek'])->name('voucher.cek');
+
+    Route::get('/kontak', [KontakController::class, 'index'])->name('kontak.index');
+    Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
+
+    Route::get('/produk/{id}', [ProdukController::class, 'detail'])->name('produk.detail');
 
 });
