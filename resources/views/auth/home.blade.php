@@ -476,7 +476,10 @@
             <h2>🛍️ Lumidouce Market</h2>
             <div class="auth-area">
                 @auth
-                    <span>Halo, {{ auth()->user()->name }} |</span>
+                    <a href="{{ route('profile.index') }}" style="color: #ffd700; text-decoration:none; font-weight:bold;">
+    Halo, {{ auth()->user()->name }}
+</a> |
+
                     <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                         @csrf
                         <button type="submit">Logout</button>
@@ -494,8 +497,55 @@
             </div>
         @endif
 
+ <form method="GET" style="margin: 20px 40px; padding:20px; 
+    background: rgba(255,255,255,0.15); border-radius: 15px; backdrop-filter:blur(8px);">
+
+    <h3 style="color:white; margin-bottom:10px;">🔍 Filter Produk</h3>
+
+    <div style="display:flex; gap:15px; flex-wrap:wrap;">
+
+        <input type="text" name="search" placeholder="Cari nama..."
+            value="{{ request('search') }}"
+            style="flex:1; padding:10px; border-radius:10px; border:none;">
+
+        <select name="kategori" style="padding:10px; border-radius:10px; border:none;">
+            <option value="">Semua Kategori</option>
+            <option value="makanan" {{ request('kategori')=='makanan'?'selected':'' }}>Makanan</option>
+            <option value="minuman" {{ request('kategori')=='minuman'?'selected':'' }}>Minuman</option>
+            <option value="elektronik" {{ request('kategori')=='elektronik'?'selected':'' }}>Elektronik</option>
+            <option value="lainnya" {{ request('kategori')=='lainnya'?'selected':'' }}>Lainnya</option>
+        </select>
+
+        <input type="number" name="min" placeholder="Min Harga"
+            value="{{ request('min') }}"
+            style="width:150px; padding:10px; border-radius:10px; border:none;">
+
+        <input type="number" name="max" placeholder="Max Harga"
+            value="{{ request('max') }}"
+            style="width:150px; padding:10px; border-radius:10px; border:none;">
+
+        <select name="sort" style="padding:10px; border-radius:10px; border:none;">
+            <option value="">Urutkan</option>
+            <option value="termurah" {{ request('sort')=='termurah'?'selected':'' }}>Termurah</option>
+            <option value="termahal" {{ request('sort')=='termahal'?'selected':'' }}>Termahal</option>
+        </select>
+
+        <select name="stock" style="padding:10px; border-radius:10px; border:none;">
+            <option value="">Stok</option>
+            <option value="1" {{ request('stock')=='1'?'selected':'' }}>Tersedia</option>
+        </select>
+
+        <button class="btn btn-primary" style="padding:10px 20px;">
+            Terapkan
+        </button>
+    </div>
+</form>
+
+
+
         <div class="produk-grid">
             @foreach($produk as $p)
+            <a href="{{ route('produk.detail', $p->ProdukID) }}" style="text-decoration:none; color:inherit;">
                 <div class="produk-card" data-product-id="{{ $p->ProdukID }}">
                     <img src="{{ $p->FotoURL ?? 'https://via.placeholder.com/300x200?text=No+Image' }}" 
                          alt="Foto {{ $p->NamaProduk }}" 
@@ -510,7 +560,7 @@
                     <div class="stock-info">
                         📦 Stok: {{ $p->Stok }}
                     </div>
-
+            </a>
                     @auth
                         <div class="form-section">
                             {{-- Form beli langsung --}}
@@ -605,9 +655,14 @@
                 <a href="{{ route('keranjang.index') }}">
                     🛒 Lihat Keranjang
                 </a>
-                <a href="{{ route('checkout') }}">
-                    🧾 Checkout Sekarang
+                <a href="{{ route('kontak.index') }}">
+                    💬 Kirim Pesan ke Admin
                 </a>
+                <a href="{{ route('promo.index') }}" class="floating-promo">🎉 Promo</a>
+<style>
+.floating-promo { position: fixed; bottom: 25px; left: 25px; background: #ff6b6b; color:#fff; padding:12px 18px; border-radius:28px; z-index:999; text-decoration:none; }
+</style>
+
             </div>
         @endauth
     </div>

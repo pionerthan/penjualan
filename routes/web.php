@@ -6,6 +6,9 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\KontakController;
+use App\Http\Controllers\PromoController;
+use App\Http\Controllers\ProfileController;
 
 // Halaman umum
 Route::get('/', [ProdukController::class, 'index'])->name('home');
@@ -38,7 +41,20 @@ Route::middleware('auth')->group(function () {
 
     // web.php
     Route::get('/pelanggan/cari', [TransaksiController::class, 'cariPelanggan'])->name('pelanggan.cari');
-
     Route::post('/voucher/cek', [VoucherController::class, 'cek'])->name('voucher.cek');
+
+    Route::get('/kontak', [KontakController::class, 'index'])->name('kontak.index');
+    Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
+
+    Route::get('/produk/{id}', [ProdukController::class, 'detail'])->name('produk.detail');
+
+    Route::get('/promo', [PromoController::class, 'index'])->name('promo.index');
+    Route::get('/promo/{id}', [PromoController::class, 'show'])->name('promo.show'); // promo detail
+    Route::post('/promo/claim', [PromoController::class, 'claimVoucher'])->name('promo.claim');
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    
 
 });
