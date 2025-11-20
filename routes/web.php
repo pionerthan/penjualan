@@ -7,8 +7,11 @@ use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\KontakController;
+<<<<<<< HEAD
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\ProfileController;
+=======
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
 
 // Halaman umum
 Route::get('/', [ProdukController::class, 'index'])->name('home');
@@ -48,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/produk/{id}', [ProdukController::class, 'detail'])->name('produk.detail');
 
+<<<<<<< HEAD
     Route::get('/promo', [PromoController::class, 'index'])->name('promo.index');
     Route::get('/promo/{id}', [PromoController::class, 'show'])->name('promo.show'); // promo detail
     Route::post('/promo/claim', [PromoController::class, 'claimVoucher'])->name('promo.claim');
@@ -58,3 +62,6 @@ Route::middleware('auth')->group(function () {
     
 
 });
+=======
+});
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
