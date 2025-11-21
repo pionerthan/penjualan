@@ -28,6 +28,7 @@ class ProdukResource extends Resource
                     ->label('Nama Produk')
                     ->required()
                     ->maxLength(255),
+<<<<<<< HEAD
 
                 TextInput::make('brand')
                     ->label('Brand')
@@ -76,6 +77,59 @@ class ProdukResource extends Resource
                                 $stokKeluar = $record->inventories()->where('tipe', 'out')->sum('qty');
                                 $stokInventory = $stokMasuk - $stokKeluar;
 
+=======
+<<<<<<< HEAD
+                TextInput::make('brand')
+                    ->label('Brand')
+                    ->maxLength(255),
+=======
+<<<<<<< HEAD
+                TextInput::make('brand')
+                    ->label('Brand')
+                    ->maxLength(255),
+=======
+>>>>>>> 3eceda08ca25fb54a8ad6cc03c7d40295de84383
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
+                Select::make('kategori')
+                    ->label('Kategori')
+                    ->options([
+                        'makanan' => 'Makanan',
+                        'minuman' => 'Minuman',
+                        'elektronik' => 'Elektronik',
+                        'lainnya' => 'Lainnya',
+                    ])
+                    ->required(),
+                TextInput::make('Harga')
+                    ->label('Harga')
+                    ->numeric()
+                    ->prefix('Rp')
+                    ->required(),
+
+                TextInput::make('Stok')
+                    ->label('Stok')
+                    ->numeric()
+                    ->required()
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set, callable $get, $component) {
+                        if ($state == 0) {
+                            $component->helperText('⚠️ Produk otomatis berstatus OUTSTOCK jika stok = 0.');
+                        } else {
+                            $component->helperText('');
+                        }
+                    })
+                    ->rule(function ($record) {
+                        return function (string $attribute, $value, $fail) use ($record) {
+                            if (!$record) return;
+
+                            $oldStok = (int) $record->Stok;
+                            $delta = (int)$value - $oldStok;
+
+                            if ($delta > 0) {
+                                $stokMasuk = $record->inventories()->where('tipe', 'in')->sum('qty');
+                                $stokKeluar = $record->inventories()->where('tipe', 'out')->sum('qty');
+                                $stokInventory = $stokMasuk - $stokKeluar;
+
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
                                 if ($delta > $stokInventory) {
                                     $fail("❌ Tidak bisa menambah stok sebanyak {$delta}. Stok gudang tersisa hanya {$stokInventory}.");
                                 }
@@ -88,11 +142,29 @@ class ProdukResource extends Resource
                     ->placeholder('https://example.com/foto.jpg')
                     ->url()
                     ->maxLength(2048),
+<<<<<<< HEAD
                 Forms\Components\RichEditor::make('deskripsi')
                     ->label('Deskripsi')
                     ->columnSpanFull(),
 
                 Forms\Components\Select::make('status')
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
+                Forms\Components\RichEditor::make('deskripsi')
+                    ->label('Deskripsi')
+                    ->columnSpanFull(),
+                Select::make('status')
+<<<<<<< HEAD
+=======
+=======
+
+                Forms\Components\Select::make('status')
+>>>>>>> 3eceda08ca25fb54a8ad6cc03c7d40295de84383
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
                     ->label('Status')
                     ->options([
                         'active' => 'Active',
@@ -109,6 +181,13 @@ class ProdukResource extends Resource
             ->columns([
                 TextColumn::make('ProdukID')->label('ID')->sortable(),
                 TextColumn::make('NamaProduk')->label('Nama Produk')->searchable(),
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
                 TextColumn::make('brand')
                     ->label('Brand')
                     ->sortable()
@@ -117,12 +196,23 @@ class ProdukResource extends Resource
                     ->label('Kategori')
                     ->sortable()
                     ->searchable(),
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
 
                 TextColumn::make('kategori')          // ← tampilkan kategori
                     ->label('Kategori')
                     ->sortable()
                     ->searchable(),
 
+<<<<<<< HEAD
+=======
+>>>>>>> 3eceda08ca25fb54a8ad6cc03c7d40295de84383
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
                 TextColumn::make('Harga')->label('Harga')->money('IDR', true),
                 TextColumn::make('Stok')->label('Stok'),
                 Tables\Columns\ImageColumn::make('FotoURL')->label('Foto')->size(60),
@@ -142,6 +232,13 @@ class ProdukResource extends Resource
                     'active' => 'Active',
                     'inactive' => 'Inactive',
                 ]),
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
                 SelectFilter::make('brand')
                     ->label('Brand')
                     ->options(
@@ -151,7 +248,16 @@ class ProdukResource extends Resource
                     ->filter()
                     ->toArray()
                 ),
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+=======
+=======
+
+>>>>>>> 3eceda08ca25fb54a8ad6cc03c7d40295de84383
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
                 SelectFilter::make('status_stok')->label('Status Stok')->options([
                     'instock' => 'In Stock',
                     'outstock' => 'Out Stock',

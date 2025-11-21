@@ -658,15 +658,27 @@
                 <a href="{{ route('kontak.index') }}">
                     💬 Kirim Pesan ke Admin
                 </a>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
                 <a href="{{ route('promo.index') }}" class="floating-promo">🎉 Promo</a>
 <style>
 .floating-promo { position: fixed; bottom: 25px; left: 25px; background: #ff6b6b; color:#fff; padding:12px 18px; border-radius:28px; z-index:999; text-decoration:none; }
 </style>
 
+<<<<<<< HEAD
                 <a href="{{ route('kontak.index') }}">
                     💬 Kirim Pesan ke Admin
                 </a>
 
+=======
+=======
+                <a href="{{ route('kontak.index') }}">
+                    💬 Kirim Pesan ke Admin
+                </a>
+>>>>>>> f202dc11e1c9280eac50fe08d2aaa638049b59de
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
             </div>
         @endauth
     </div>

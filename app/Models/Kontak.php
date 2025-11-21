@@ -15,4 +15,8 @@ class Kontak extends Model
         'subjek',
         'pesan',
     ];
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3

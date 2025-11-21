@@ -20,7 +20,11 @@
 <body>
     {{-- Header --}}
     <header class="mb-3">
+<<<<<<< HEAD
         <h1>Lumidouce</h1>
+=======
+        <h1>Toko Online</h1>
+>>>>>>> 664d613eb671ee952505110855ffdac2a37313e3
 
         <nav>
             <a href="{{ route('home') }}">Home</a> |
