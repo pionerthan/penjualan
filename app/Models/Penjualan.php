@@ -17,6 +17,7 @@ class Penjualan extends Model
         'TotalHarga',
         'PelangganID',
         'Pajak',
+        'status_penjualan',
     ];
 
     // Relasi ke pelanggan (many-to-one)

@@ -12,9 +12,13 @@ use Illuminate\Support\Facades\Session;
 
 class TransaksiController extends Controller
 {
+    /**
+     * Tampilkan halaman checkout.
+     */
     public function checkout()
     {
         $keranjang = Session::get('keranjang', []);
+
         if (empty($keranjang)) {
             return redirect()->route('keranjang.index')->with('error', 'Keranjang kosong.');
         }
@@ -33,15 +37,14 @@ class TransaksiController extends Controller
     }
 
     /**
-     * Memproses transaksi dari keranjang.
+     * Proses transaksi dari keranjang.
      */
     public function proses(Request $request)
     {
-        // Validasi input pelanggan
+        // Validasi input pelanggan jika diperlukan (misal alamat atau no. telepon)
         $request->validate([
-            'NamaPelanggan'   => 'required|string|max:255',
-            'Alamat'          => 'required|string|max:255',
-            'NomorTelepon'    => 'required|string|max:20',
+            'Alamat' => 'nullable|string|max:255',
+            'NomorTelepon' => 'nullable|string|max:20',
         ]);
 
         $keranjang = Session::get('keranjang', []);
@@ -49,17 +52,18 @@ class TransaksiController extends Controller
             return redirect()->route('keranjang.index')->with('error', 'Keranjang kosong.');
         }
 
-        // Simpan atau ambil data pelanggan
-        $pelanggan = Pelanggan::firstOrCreate(
-            [
+        // Ambil pelanggan dari user login (listener auto-create)
+        $pelanggan = Auth::user()->pelanggan;
+
+        // Fallback jika pelanggan belum ada (seharusnya jarang terjadi)
+        if (!$pelanggan) {
+            $pelanggan = Pelanggan::create([
+                'NamaPelanggan' => Auth::user()->name,
+                'Alamat' => $request->Alamat ?? '-',
+                'NomorTelepon' => $request->NomorTelepon ?? '-',
                 'user_id' => Auth::id(),
-                'NamaPelanggan' => $request->NamaPelanggan,
-            ],
-            [
-                'Alamat' => $request->Alamat,
-                'NomorTelepon' => $request->NomorTelepon,
-            ]
-        );
+            ]);
+        }
 
         $totalHarga = 0;
         $detail = [];
@@ -92,10 +96,10 @@ class TransaksiController extends Controller
         // Simpan detail penjualan & update stok
         foreach ($detail as $item) {
             Detailpenjualan::create([
-                'PenjualanID'   => $penjualan->PenjualanID,
-                'ProdukID'      => $item['produk']->ProdukID,
-                'JumlahProduk'  => $item['jumlah'],
-                'Subtotal'      => $item['subtotal'],
+                'PenjualanID' => $penjualan->PenjualanID,
+                'ProdukID' => $item['produk']->ProdukID,
+                'JumlahProduk' => $item['jumlah'],
+                'Subtotal' => $item['subtotal'],
             ]);
 
             $item['produk']->decrement('Stok', $item['jumlah']);
@@ -120,17 +124,20 @@ class TransaksiController extends Controller
         return view('auth.pembayaran', compact('penjualan'));
     }
 
+    /**
+     * Cari data pelanggan via AJAX.
+     */
     public function cariPelanggan(Request $request)
-{
-    $pelanggan = Pelanggan::where('NamaPelanggan', $request->nama)->first();
+    {
+        $pelanggan = Pelanggan::where('NamaPelanggan', $request->nama)->first();
 
-    if ($pelanggan) {
-        return response()->json([
-            'Alamat' => $pelanggan->Alamat,
-            'NomorTelepon' => $pelanggan->NomorTelepon,
-        ]);
+        if ($pelanggan) {
+            return response()->json([
+                'Alamat' => $pelanggan->Alamat,
+                'NomorTelepon' => $pelanggan->NomorTelepon,
+            ]);
+        }
+
+        return response()->json(null);
     }
-
-    return response()->json(null);
-}
 }

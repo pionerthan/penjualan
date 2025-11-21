@@ -39,8 +39,16 @@ class Produk extends Model
     }
 
     public function inventories()
-{
-    return $this->hasMany(Inventory::class, 'produkID');
-}
+    {
+        return $this->hasMany(Inventory::class, 'produk_id', 'ProdukID');
+    }
+
+    public function getInventoryStokAttribute()
+    {
+        $in  = $this->inventories()->where('tipe', 'in')->sum('qty');
+        $out = $this->inventories()->where('tipe', 'out')->sum('qty');
+
+        return $in - $out;
+    }
 
 }

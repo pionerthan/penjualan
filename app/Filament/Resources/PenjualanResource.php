@@ -41,6 +41,17 @@ class PenjualanResource extends Resource
                 ->searchable()
                 ->required(),
 
+            Select::make('status_penjualan')
+                ->label('Status Penjualan')
+                ->options([
+                    'disiapkan' => 'Disiapkan',
+                    'dikirim' => 'Dikirim',
+                    'selesai' => 'Selesai',
+            ])
+                ->default('disiapkan')
+                ->required()
+                ->native(false),
+
             TextInput::make('TotalHarga')
                 ->label('Total Harga')
                 ->prefix('Rp')
@@ -104,6 +115,9 @@ class PenjualanResource extends Resource
                 ->label('Diskon')
                 ->prefix('Rp')
                 ->disabled(),
+
+            
+
 
             Repeater::make('detailPenjualans')
                 ->label('Detail Produk')
@@ -224,6 +238,15 @@ class PenjualanResource extends Resource
                 TextColumn::make('TanggalPenjualan')->label('Tanggal'),
                 TextColumn::make('pelanggan.NamaPelanggan')->label('Pelanggan'),
                 TextColumn::make('TotalHarga')->label('Total')->money('IDR', true),
+                TextColumn::make('status_penjualan')
+                    ->label('Status')
+                    ->badge()
+                    ->colors([
+                        'warning' => 'disiapkan',
+                        'info' => 'dikirim',
+                        'success' => 'selesai',
+                ]),
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

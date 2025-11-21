@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Inventory extends Model
 {
+    protected $table = 'inventories'; // pastikan nama tabel benar
+
     protected $fillable = [
         'produk_id',
         'tipe',

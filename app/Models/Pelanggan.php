@@ -24,4 +24,10 @@ class Pelanggan extends Model
     {
         return $this->hasMany(Penjualan::class, 'PelangganID', 'PelangganID');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
 }

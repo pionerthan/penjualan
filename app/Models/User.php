@@ -66,4 +66,10 @@ class User extends Authenticatable
     {
         return $this->role === 'pembeli';
     }
+
+    public function pelanggan()
+    {
+        return $this->hasOne(Pelanggan::class, 'user_id', 'id');
+    }
+
 }

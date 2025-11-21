@@ -503,15 +503,18 @@
             @csrf
             <div class="form-group">
                 <label for="NamaPelanggan">Nama Pelanggan:</label>
-                <input type="text" name="NamaPelanggan" id="NamaPelanggan" required>
-            </div>
+                <input type="text" name="NamaPelanggan" id="NamaPelanggan" 
+                    value="{{ old('NamaPelanggan', $user->name) }}" required>
+                </div>
             <div class="form-group">
                 <label for="Alamat">Alamat:</label>
-                <input type="text" name="Alamat" id="Alamat" required>
+                <input type="text" name="Alamat" id="Alamat" 
+                    value="{{ old('Alamat', optional($user->pelanggan)->Alamat) }}" required>
             </div>
             <div class="form-group">
                 <label for="NomorTelepon">Nomor Telepon:</label>
-                <input type="text" name="NomorTelepon" id="NomorTelepon" required>
+                <input type="text" name="NomorTelepon" id="NomorTelepon" 
+                    value="{{ old('NomorTelepon', optional($user->pelanggan)->NomorTelepon) }}" required>
             </div>
 
             <div class="payment-method-group">

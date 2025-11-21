@@ -5,18 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Pelanggan;
 
 class KeranjangController extends Controller
 {
     // Menampilkan isi keranjang
+    
+
     public function index()
     {
         $keranjang = Session::get('keranjang', []);
         $produkIDs = array_keys($keranjang);
-
         $produks = Produk::whereIn('ProdukID', $produkIDs)->get();
 
-        return view('auth.keranjang', compact('produks', 'keranjang'));
+        $user = Auth::user();
+
+    // Ambil semua pelanggan (atau bisa filter yang terkait user login)
+        $pelanggans = Pelanggan::all();
+
+        return view('auth.keranjang', compact('produks', 'keranjang', 'user', 'pelanggans'));
     }
 
     // Menambahkan produk ke keranjang
