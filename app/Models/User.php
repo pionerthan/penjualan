@@ -10,9 +10,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * Atribut yang bisa diisi massal.
-     */
     protected $fillable = [
         'name',
         'email',
@@ -20,17 +17,11 @@ class User extends Authenticatable
         'role',
     ];
 
-    /**
-     * Atribut yang disembunyikan saat serialisasi.
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Atribut yang di-cast otomatis ke tipe data tertentu.
-     */
     protected function casts(): array
     {
         return [
@@ -39,9 +30,7 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Atur role default saat user dibuat.
-     */
+
     protected static function booted(): void
     {
         static::creating(function ($user) {
@@ -51,18 +40,13 @@ class User extends Authenticatable
         });
     }
 
-    /**
-     * Cek apakah user adalah kasir.
-     */
+
     public function isKasir(): bool
     {
         return $this->role === 'kasir';
     }
 
-    /**
-     * Cek apakah user adalah pembeli.
-     */
-    public function isPembeli(): bool
+ function isPembeli(): bool
     {
         return $this->role === 'pembeli';
     }

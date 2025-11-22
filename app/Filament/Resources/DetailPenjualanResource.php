@@ -21,7 +21,8 @@ class DetailPenjualanResource extends Resource
 {
     protected static ?string $model = DetailPenjualan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Penjualan';
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     public static function form(Form $form): Form
 {

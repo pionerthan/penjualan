@@ -20,7 +20,8 @@ class PelangganResource extends Resource
 {
     protected static ?string $model = Pelanggan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Customer';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
     public static function form(Form $form): Form
 {
@@ -41,6 +42,11 @@ class PelangganResource extends Resource
                 ->maxLength(15),
         ]);
 }
+
+public static function getNavigationBadge(): ?string
+    {
+        return null; // Tidak ada badge
+    }
 
 
     public static function table(Table $table): Table
